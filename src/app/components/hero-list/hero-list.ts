@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HeroItem } from '../hero-item/hero-item';
 import { Hero } from '../../shared/interfaces/hero.interface';
+import { HeroPowerstatsChange } from '../../shared/interfaces/hero-powerstats-change';
 
 @Component({
   selector: 'app-hero-list',
@@ -54,4 +55,7 @@ export class HeroList {
     },
   ];
 
+  savePowerstats({ hero, powerstat, value }: HeroPowerstatsChange) {
+    hero.powerstats[powerstat] += value;
+  }
 }
