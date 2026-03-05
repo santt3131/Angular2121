@@ -1,7 +1,7 @@
-import { Hero, PowerStat } from "./hero.interface";
+import { Hero, PowerStat } from './hero.interface';
 
 export interface HeroPowerstatsChange {
-    hero: Hero;
-    powerstat: PowerStat;
-    value: number;
+  hero: Hero;
+  powerstat: PowerStat;
+  value: number;
 }

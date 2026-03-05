@@ -1,5 +1,7 @@
 <div class="hero-list">
-    <app-hero-item [hero]=" heroes[0]" (powerstatsChange)="savePowerstats($event)" />
-    <app-hero-item [hero]=" heroes[1]" (powerstatsChange)="savePowerstats($event)" />
-    <app-hero-item [hero]=" heroes[2]" (powerstatsChange)="savePowerstats($event)" />
+  @for (hero of heroes; track hero.id) {
+    <app-hero-item [hero]="hero" (powerstatsChange)="savePowerstats($event)" />
+  } @empty {
+    <h1>There are no Heroes</h1>
+  }
 </div>
