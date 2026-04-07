@@ -8,7 +8,6 @@ import { HeroService } from '../../shared/services/hero';
   selector: 'app-hero-list',
   imports: [HeroItem],
   templateUrl: './hero-list.html',
-  styleUrl: './hero-list.scss',
 })
 export class HeroList {
   heroes = input.required<Hero[]>();

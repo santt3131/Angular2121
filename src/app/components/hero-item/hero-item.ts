@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
   selector: 'app-hero-item',
   imports: [CommonModule],
   templateUrl: './hero-item.html',
-  styleUrl: './hero-item.scss',
 })
 export class HeroItem {
   hero = input.required<Hero>();
