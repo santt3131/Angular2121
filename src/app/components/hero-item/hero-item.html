@@ -36,5 +36,11 @@
         </div>
       </div>
     }
+    <hr class="m-4 border-amber-600" />
+    <span class="btn btn-gray mr-2 text-xl" [routerLink]="['/hero', 'update', hero().id]">
+      Update
+    </span>
+
+    <span class="btn btn-blue text-xl" [routerLink]="['/hero', hero().id]"> View </span>
   </div>
 </div>
