@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { heroResolver } from './shared/guards/hero.resolver';
+import { heroIdMatcher } from './shared/matchers/hero-id.matcher';
 
 export const routes: Routes = [
   {
@@ -16,11 +18,12 @@ export const routes: Routes = [
         path: 'update/:id',
         loadComponent: () =>
           import('./pages/hero/hero-update/hero-update').then((m) => m.HeroUpdate),
+        resolve: { hero: heroResolver },
       },
       {
-        path: ':id',
         loadComponent: () =>
           import('./pages/hero/hero-detail/hero-detail').then((m) => m.HeroDetail),
+        matcher: heroIdMatcher,
       },
     ],
   },
