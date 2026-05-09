@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "outDir": "./dist",
+        "resolveJsonModule": true,
+        "strict" : true,
+        "esModuleInterop": true,
+        //Inyector de dependencias que usa decoradores,
+        // por eso se necesitamos estas opciones
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "strictPropertyInitialization": false
+    },
+    "exclude": [
+        "node_modules"
+    ],
+    "include": [
+        "src/**/*.ts"
+    ]
+}
