@@ -25,7 +25,7 @@ export class HeroController {
   #findAll = async (req: Request, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 600;
+      const limit = parseInt(req.query.limit as string) || 10;
       const result = this.heroService.findAll(page, limit);
       res.send(result);
     } catch (error) {

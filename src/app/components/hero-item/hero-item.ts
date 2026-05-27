@@ -13,6 +13,7 @@ export class HeroItem {
   hero = input.required<Hero>();
   powerstatsChange = output<HeroPowerstatsChange>();
   isHeroVillain = computed(() => this.hero().alignment === 'bad');
+  removeHero = output<Hero>();
 
   decrementPowerStats(powerstat: PowerStat): void {
     this.powerstatsChange.emit({ hero: this.hero(), powerstat, value: -1 });
@@ -20,5 +21,9 @@ export class HeroItem {
 
   incrementPowerStats(powerstat: PowerStat): void {
     this.powerstatsChange.emit({ hero: this.hero(), powerstat, value: +1 });
+  }
+
+  remove(hero: Hero): void {
+    this.removeHero.emit(hero);
   }
 }

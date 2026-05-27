@@ -41,6 +41,8 @@
       Update
     </span>
 
-    <span class="btn btn-blue text-xl" [routerLink]="['/hero', hero().id]"> View </span>
+    <span class="btn btn-blue mr-2 text-xl" [routerLink]="['/hero', hero().id]"> View </span>
+
+    <span class="btn btn-red text-xl" (click)="remove(hero())"> Delete </span>
   </div>
 </div>
