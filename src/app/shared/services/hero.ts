@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Hero, PowerStat } from '../interfaces/hero.interface';
 import { HeroServiceAbstract } from './hero.service.abstract';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -14,14 +14,17 @@ export class HeroService extends HeroServiceAbstract {
 
   readonly #httpClient = inject(HttpClient);
 
+  #buildParams(page = 1, limit = 600) {
+    return new HttpParams({
+      fromObject: {
+        page: page.toString(),
+        limit: limit.toString(),
+      },
+    });
+  }
+
   load(): Observable<{ heroes: Hero[]; total: number }> {
-    return this.#httpClient.get<{ heroes: Hero[]; total: number }>(this.API_ENDPOINT).pipe(
-      tap((result) => this.#heroesSignal.set(result.heroes)),
-      catchError((error) => {
-        console.error('Error loading heroes:', error);
-        return throwError(() => error);
-      }),
-    );
+    return this.findAll({ page: 1, limit: 600 });
   }
 
   add(hero: Hero) {
@@ -72,8 +75,9 @@ export class HeroService extends HeroServiceAbstract {
     );
   }
 
-  findAll(): Observable<{ heroes: Hero[]; total: number }> {
-    return this.#httpClient.get<{ heroes: Hero[]; total: number }>(this.API_ENDPOINT).pipe(
+  findAll(params?: { page: number; limit: number }): Observable<{ heroes: Hero[]; total: number }> {
+    const httpParams = this.#buildParams(params?.page ?? 1, params?.limit ?? 600);
+    return this.#httpClient.get<{ heroes: Hero[]; total: number }>(this.API_ENDPOINT, { params: httpParams }).pipe(
       tap((result) => this.#heroesSignal.set(result.heroes)),
       catchError((error) => {
         console.error('Error loading heroes:', error);
