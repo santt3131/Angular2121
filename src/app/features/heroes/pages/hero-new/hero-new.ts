@@ -2,9 +2,10 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { NEVER } from 'rxjs';
-import { HeroForm } from '../../../components/hero-form/hero-form';
-import { Hero } from '../../../shared/interfaces/hero.interface';
-import { HeroService } from '../../../shared/services/hero';
+import { Hero } from '../../interfaces/hero.interface';
+import { HeroService } from '../../services/hero';
+import { HeroForm } from '../../components/hero-form/hero-form';
+import { HEROES_PAGES } from '../../heroes.routes';
 
 @Component({
   selector: 'app-hero-new',
@@ -33,7 +34,7 @@ export class HeroNew {
 
   navigateEffect = effect(() => {
     if (!this.#heroService.isDefaultHero(this.heroSignal()) && this.isHeroResourceCompleted()) {
-      this.#router.navigate(['/home']);
+      this.#router.navigate([HEROES_PAGES.HERO, HEROES_PAGES.HOME]);
     }
   });
 

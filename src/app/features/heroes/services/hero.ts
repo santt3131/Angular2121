@@ -1,8 +1,8 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { Hero, PowerStat } from '../interfaces/hero.interface';
-import { HeroServiceAbstract } from './hero.service.abstract';
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { HeroServiceAbstract } from './hero.service.abstract';
+import { Hero, PowerStat } from '../interfaces/hero.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -77,13 +77,15 @@ export class HeroService extends HeroServiceAbstract {
 
   findAll(params?: { page: number; limit: number }): Observable<{ heroes: Hero[]; total: number }> {
     const httpParams = this.#buildParams(params?.page ?? 1, params?.limit ?? 600);
-    return this.#httpClient.get<{ heroes: Hero[]; total: number }>(this.API_ENDPOINT, { params: httpParams }).pipe(
-      tap((result) => this.#heroesSignal.set(result.heroes)),
-      catchError((error) => {
-        console.error('Error loading heroes:', error);
-        return throwError(() => error);
-      }),
-    );
+    return this.#httpClient
+      .get<{ heroes: Hero[]; total: number }>(this.API_ENDPOINT, { params: httpParams })
+      .pipe(
+        tap((result) => this.#heroesSignal.set(result.heroes)),
+        catchError((error) => {
+          console.error('Error loading heroes:', error);
+          return throwError(() => error);
+        }),
+      );
   }
 
   findOne(id: number): Observable<Hero> {

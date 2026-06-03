@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { HeroList } from '../../components/hero-list/hero-list';
-import { HeroService } from '../../shared/services/hero';
+
 import { rxResource } from '@angular/core/rxjs-interop';
+import { HeroService } from '../../services/hero';
 @Component({
   selector: 'app-home',
   imports: [HeroList],

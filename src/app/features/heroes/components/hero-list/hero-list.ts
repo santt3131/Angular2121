@@ -1,10 +1,11 @@
-import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { HeroItem } from '../hero-item/hero-item';
-import { Hero } from '../../shared/interfaces/hero.interface';
-import { HeroPowerstatsChange } from '../../shared/interfaces/hero-powerstats-change';
-import { HeroService } from '../../shared/services/hero';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+import { rxResource } from '@angular/core/rxjs-interop';
 import { NEVER } from 'rxjs';
+import { HeroService } from '../../services/hero';
+import { Hero } from '../../interfaces/hero.interface';
+import { HeroPowerstatsChange } from '../../interfaces/hero-powerstats-change';
 
 @Component({
   selector: 'app-hero-list',

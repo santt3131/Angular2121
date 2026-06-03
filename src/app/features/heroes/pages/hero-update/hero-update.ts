@@ -1,20 +1,13 @@
-import {
-  Component,
-  computed,
-  DestroyRef,
-  effect,
-  inject,
-  input,
-  numberAttribute,
-  signal,
-} from '@angular/core';
-import { HeroForm } from '../../../components/hero-form/hero-form';
-import { Hero } from '../../../shared/interfaces/hero.interface';
-import { ActivatedRoute, Router } from '@angular/router';
-import { HeroService } from '../../../shared/services/hero';
-import { HeroItemNotFound } from '../../../components/hero-item-not-found/hero-item-not-found';
-import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, computed, effect, inject, input, numberAttribute, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { NEVER } from 'rxjs';
+
+import { Hero } from '../../interfaces/hero.interface';
+import { HeroItemNotFound } from '../../components/hero-item-not-found/hero-item-not-found';
+import { HeroForm } from '../../components/hero-form/hero-form';
+import { HeroService } from '../../services/hero';
+import { HEROES_PAGES } from '../../heroes.routes';
 
 @Component({
   selector: 'app-hero-update',
@@ -61,7 +54,7 @@ export class HeroUpdate {
       !this.#heroService.isDefaultHero(this.heroSignal()) &&
       this.isHeroToUpdateResourceCompleted()
     ) {
-      this.#router.navigate(['/home']);
+      this.#router.navigate([HEROES_PAGES.HERO, HEROES_PAGES.HOME]);
     }
   });
 

@@ -1,16 +1,17 @@
 import { Component, computed, inject, input, numberAttribute } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { HeroItemNotFound } from '../../../components/hero-item-not-found/hero-item-not-found';
-import { HeroItem } from '../../../components/hero-item/hero-item';
-import { Hero } from '../../../shared/interfaces/hero.interface';
-import { HeroService } from '../../../shared/services/hero';
+
+import { Hero } from '../../interfaces/hero.interface';
+import { HeroItemNotFound } from '../../components/hero-item-not-found/hero-item-not-found';
+import { HeroItem } from '../../components/hero-item/hero-item';
+import { HeroService } from '../../services/hero';
 
 @Component({
   selector: 'app-hero-detail',
   imports: [HeroItem, HeroItemNotFound],
   template: `
     @if (hero()) {
-      <app-hero-item [hero]="hero()" />
+      <app-hero-item [hero]="hero()" [readonly]="true" />
     } @else {
       <app-hero-item-not-found />
     }

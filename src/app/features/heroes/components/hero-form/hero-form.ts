@@ -1,9 +1,9 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, computed, inject, input, output, Signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Hero } from '../../shared/interfaces/hero.interface';
-import { heroNameValidator } from '../../shared/validators/hero-name.validator';
-import { TitleCasePipe } from '@angular/common';
-import { HeroService } from '../../shared/services/hero';
+import { HeroService } from '../../services/hero';
+import { Hero } from '../../interfaces/hero.interface';
+import { heroNameValidator } from '../../validators/hero-name.validator';
 
 @Component({
   selector: 'app-hero-form',
