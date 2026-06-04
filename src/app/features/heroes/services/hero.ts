@@ -24,12 +24,17 @@ export class HeroService extends HeroServiceAbstract {
   }
 
   load(): Observable<{ heroes: Hero[]; total: number }> {
-    return this.findAll({ page: 1, limit: 600 });
+    return this.findAll({ page: 1, limit: 10 });
   }
 
   add(hero: Hero) {
     return this.#httpClient.post<Hero>(this.API_ENDPOINT, hero).pipe(
-      tap((newHero) => this.#heroesSignal.update((currentHeroes) => [...currentHeroes, newHero])),
+      tap((newHero) =>
+        this.#heroesSignal.update((currentHeroes) => [
+          ...currentHeroes,
+          newHero,
+        ]),
+      ),
       catchError((error) => {
         console.error('Error loading heroes:', error);
         return throwError(() => error);
@@ -37,7 +42,11 @@ export class HeroService extends HeroServiceAbstract {
     );
   }
 
-  updatePowerstat(hero: Hero, powerstat: PowerStat, value: number): Observable<Hero> {
+  updatePowerstat(
+    hero: Hero,
+    powerstat: PowerStat,
+    value: number,
+  ): Observable<Hero> {
     const heroToUpdate = {
       ...hero,
       powerstats: {
@@ -50,35 +59,52 @@ export class HeroService extends HeroServiceAbstract {
   }
 
   update(heroToUpdate: Hero): Observable<Hero> {
-    return this.#httpClient.put<Hero>(`${this.API_ENDPOINT}/${heroToUpdate.id}`, heroToUpdate).pipe(
-      tap((updatedHero) => {
-        this.#heroesSignal.update((currentHeroes) =>
-          currentHeroes.map((hero) => (hero.id === updatedHero.id ? updatedHero : hero)),
-        );
-      }),
-      catchError((error) => {
-        console.error('Error updating hero:', error);
-        return throwError(() => error);
-      }),
-    );
+    return this.#httpClient
+      .put<Hero>(`${this.API_ENDPOINT}/${heroToUpdate.id}`, heroToUpdate)
+      .pipe(
+        tap((updatedHero) => {
+          this.#heroesSignal.update((currentHeroes) =>
+            currentHeroes.map((hero) =>
+              hero.id === updatedHero.id ? updatedHero : hero,
+            ),
+          );
+        }),
+        catchError((error) => {
+          console.error('Error updating hero:', error);
+          return throwError(() => error);
+        }),
+      );
   }
 
   remove(hero: Hero): Observable<void> {
-    return this.#httpClient.delete<void>(`${this.API_ENDPOINT}/${hero.id}`).pipe(
-      tap(() => {
-        this.#heroesSignal.update((currentHeroes) => currentHeroes.filter((h) => h.id !== hero.id));
-      }),
-      catchError((error) => {
-        console.error('Error removing hero:', error);
-        return throwError(() => error);
-      }),
-    );
+    return this.#httpClient
+      .delete<void>(`${this.API_ENDPOINT}/${hero.id}`)
+      .pipe(
+        tap(() => {
+          this.#heroesSignal.update((currentHeroes) =>
+            currentHeroes.filter((h) => h.id !== hero.id),
+          );
+        }),
+        catchError((error) => {
+          console.error('Error removing hero:', error);
+          return throwError(() => error);
+        }),
+      );
   }
 
-  findAll(params?: { page: number; limit: number }): Observable<{ heroes: Hero[]; total: number }> {
-    const httpParams = this.#buildParams(params?.page ?? 1, params?.limit ?? 600);
+  findAll(params?: {
+    page: number;
+    limit: number;
+  }): Observable<{ heroes: Hero[]; total: number }> {
+    const httpParams = this.#buildParams(
+      params?.page ?? 1,
+      params?.limit ?? 600,
+    );
     return this.#httpClient
-      .get<{ heroes: Hero[]; total: number }>(this.API_ENDPOINT, { params: httpParams })
+      .get<{
+        heroes: Hero[];
+        total: number;
+      }>(this.API_ENDPOINT, { params: httpParams })
       .pipe(
         tap((result) => this.#heroesSignal.set(result.heroes)),
         catchError((error) => {
