@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { heroResolver } from './guards/hero.resolver';
 import { heroIdMatcher } from './matchers/hero-id.matcher';
+import { heroUnsavedChangesGuard } from './guards/hero-unsaved-changes.guard';
 
 export enum HEROES_PAGES {
   HERO = '/hero',
@@ -25,16 +26,20 @@ export const HEROES_ROUTES: Routes = [
       },
       {
         path: HEROES_PAGES.NEW,
-        loadComponent: () => import('./pages/hero-new/hero-new').then((c) => c.HeroNew),
+        loadComponent: () =>
+          import('./pages/hero-new/hero-new').then((c) => c.HeroNew),
       },
       {
         path: `${HEROES_PAGES.UPDATE}/:id`,
-        loadComponent: () => import('./pages/hero-update/hero-update').then((c) => c.HeroUpdate),
+        loadComponent: () =>
+          import('./pages/hero-update/hero-update').then((c) => c.HeroUpdate),
         resolve: { hero: heroResolver },
         // resolve: Precarga los datos del héroe en segundo plano antes de mostrar la pantalla de edición.
+        canDeactivate: [heroUnsavedChangesGuard],
       },
       {
-        loadComponent: () => import('./pages/hero-detail/hero-detail').then((c) => c.HeroDetail),
+        loadComponent: () =>
+          import('./pages/hero-detail/hero-detail').then((c) => c.HeroDetail),
         matcher: heroIdMatcher,
         // matcher: Aplica una regla personalizada (expresión regular)
         // para validar si la URL es un ID correcto

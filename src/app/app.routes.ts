@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './shared/guards/auth-guard';
 
 export enum FEATURES_PAGES {
   HERO = 'hero',
@@ -16,11 +17,16 @@ export const routes: Routes = [
       },
       {
         path: FEATURES_PAGES.AUTH,
-        loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+        loadChildren: () =>
+          import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
       },
       {
         path: FEATURES_PAGES.HERO,
-        loadChildren: () => import('./features/heroes/heroes.routes').then((m) => m.HEROES_ROUTES),
+        loadChildren: () =>
+          import('./features/heroes/heroes.routes').then(
+            (m) => m.HEROES_ROUTES,
+          ),
+        canActivate: [authGuard],
       },
       {
         path: '**',

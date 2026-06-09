@@ -1,6 +1,19 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, computed, inject, input, output, Signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+  Signal,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { HeroService } from '../../services/hero';
 import { Hero } from '../../interfaces/hero.interface';
 import { heroNameValidator } from '../../validators/hero-name.validator';
@@ -17,9 +30,18 @@ export class HeroForm {
   hero = input<Hero>(this.#heroService.defaultHero); //inicialmente ya tengo el valor de defaultHero, pero si se le pasa un hero por input, se actualiza el valor de hero
   readonly #formBuilder = inject(FormBuilder);
   message = '';
-  textButton = computed(() => (this.#heroService.isDefaultHero(this.hero()) ? 'Create' : 'Update'));
+  textButton = computed(() =>
+    this.#heroService.isDefaultHero(this.hero()) ? 'Create' : 'Update',
+  );
 
-  powerstats = ['combat', 'durability', 'intelligence', 'power', 'speed', 'strength'];
+  powerstats = [
+    'combat',
+    'durability',
+    'intelligence',
+    'power',
+    'speed',
+    'strength',
+  ];
 
   heroForm: Signal<FormGroup> = computed(() =>
     this.#formBuilder.group({
@@ -55,6 +77,9 @@ export class HeroForm {
     }),
   );
 
+  isSubmitted = signal(false);
+  isPendingSave = computed(() => !this.isSubmitted() && this.heroForm().dirty);
+
   addHero() {
     if (this.heroForm().invalid) {
       this.message = 'Please correct all errors and resubmit the form ';
@@ -65,6 +90,7 @@ export class HeroForm {
         ...this.heroForm().value,
       };
       console.log('Creating Hero', hero);
+      this.isSubmitted.set(true);
       this.add.emit(hero);
     }
   }

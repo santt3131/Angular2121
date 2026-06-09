@@ -1,4 +1,13 @@
-import { Component, computed, effect, inject, input, numberAttribute, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  numberAttribute,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { NEVER } from 'rxjs';
@@ -14,9 +23,15 @@ import { HEROES_PAGES } from '../../heroes.routes';
   imports: [HeroForm, HeroItemNotFound],
   template: `
     @if (this.isValidHero()) {
-      <div class="flex flex-col items-center bg-[rgb(94,104,255)] p-4 rounded-lg mb-4">
+      <div
+        class="flex flex-col items-center bg-[rgb(94,104,255)] p-4 rounded-lg mb-4"
+      >
         <h3 class="text-2xl font-bold text-white">Update Hero</h3>
-        <app-hero-form [hero]="hero()" (sendHero)="updateHero($event)" />
+        <app-hero-form
+          #heroForm
+          [hero]="hero()"
+          (sendHero)="updateHero($event)"
+        />
       </div>
     } @else {
       <app-hero-item-not-found />
@@ -32,14 +47,22 @@ export class HeroUpdate {
     stream: () => this.#heroService.findOne(this.id()),
   });
 
-  readonly hero = computed(() => this.#heroResource.value() ?? this.#heroService.defaultHero);
-  readonly isValidHero = computed(() => this.#heroService.isNullHero(this.hero()) !== null);
+  readonly heroFormComponent = viewChild.required<HeroForm>('heroForm');
+
+  readonly hero = computed(
+    () => this.#heroResource.value() ?? this.#heroService.defaultHero,
+  );
+  readonly isValidHero = computed(
+    () => this.#heroService.isNullHero(this.hero()) !== null,
+  );
 
   readonly heroSignal = signal<Hero>(this.#heroService.defaultHero);
   readonly #heroToUpdateResource = rxResource({
     params: () => this.heroSignal(),
     stream: ({ params }) =>
-      this.#heroService.isDefaultHero(params) ? NEVER : this.#heroService.update(params),
+      this.#heroService.isDefaultHero(params)
+        ? NEVER
+        : this.#heroService.update(params),
     equal: (hero1, hero2) => hero1.id === hero2.id,
   });
 
@@ -67,5 +90,16 @@ export class HeroUpdate {
   updateHero(hero: any) {
     console.log('Updated Hero:', hero);
     this.heroSignal.set(hero);
+  }
+
+  canDeactivate() {
+    const component = this.heroFormComponent();
+    if (component.isPendingSave()) {
+      const value = confirm(
+        'Are you sure to leave this page ? You have unsaved changes',
+      );
+      return value;
+    }
+    return true;
   }
 }
