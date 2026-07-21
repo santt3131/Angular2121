@@ -4,6 +4,7 @@ import { computed, Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class TokenStorageService {
+  //privado
   #isLogin = signal(false);
   readonly isLogin = computed(() => this.#isLogin());
   #token = localStorage.getItem('heroes-token') || '';
